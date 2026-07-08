@@ -12,8 +12,9 @@ export default function Footer() {
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1.5fr', gap: 48, paddingBottom: 56, borderBottom: '1px solid rgba(255,255,255,.07)' }}>
           {/* Brand */}
           <div>
-            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 4 }}>Visual Connect</div>
-            <div style={{ fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 20 }}>Network Pvt. Ltd.</div>
+            <div style={{ marginBottom: 16 }}>
+              <img src="/vcn_logo_with_tagline_squaresize.jpeg" alt="Visual Connect Network Pvt. Ltd." style={{ height: 96, width: 'auto', maxWidth: 120, objectFit: 'contain', display: 'block' }} />
+            </div>
             <p style={{ fontSize: 14, lineHeight: 1.75, color: 'var(--mist)', maxWidth: 280 }}>
               System integrators delivering tailored technology solutions — from CCTV and AV to networking, test equipment, and end-to-end infrastructure.
             </p>
