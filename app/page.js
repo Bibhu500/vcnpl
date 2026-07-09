@@ -492,24 +492,69 @@ h1,h2,h3,h4,h5{font-family:'DM Sans',sans-serif;font-weight:600;letter-spacing:-
 .ind-panel-body .idot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:9px}
 .ind-grid{display:none}
 
-/* ── PARTNERS — flag wave grid ── */
-.partners-sec{padding:72px 5vw;background:#fff;border-top:1px solid #edf0f7;perspective:1000px}
-.partners-grid-wrap{margin-top:44px;max-width:1000px;margin-left:auto;margin-right:auto;animation:tableFlagWave 4s ease-in-out infinite;transform-style:preserve-3d}
-.partners-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px}
-@keyframes tableFlagWave{
-  0%,100%{transform:rotateY(-3deg) rotateX(1deg)}
-  50%{transform:rotateY(3deg) rotateX(-1deg)}
+/* ── PARTNERS — responsive logo grid ── */
+.partners-sec{padding:72px 5vw;background:#fff;border-top:1px solid #edf0f7}
+.partners-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:16px;
+  margin-top:38px;
 }
 .p-chip{
+  position:relative;
+  aspect-ratio:16/9;
   display:flex;align-items:center;justify-content:center;
-  height:60px;padding:0 28px;
-  background:var(--fog);border:1px solid #e6ebf5;border-radius:100px;
-  transition:all .22s;gap:10px;
+  background:var(--fog);
+  border:1px solid #e6ebf5;
+  border-radius:14px;
+  padding:12px 14px;
+  transition:transform .22s,box-shadow .22s,border-color .22s,background .22s;
 }
-.p-chip:hover{background:#eff6ff;border-color:#bfdbfe}
-.p-chip img{height:22px;width:auto;object-fit:contain;transition:transform .22s}
+.p-chip:hover{
+  transform:translateY(-3px);
+  background:#eff6ff;
+  border-color:#bfdbfe;
+  box-shadow:0 10px 26px rgba(59,91,252,.1);
+}
+.p-chip img{
+  max-width:92%;
+  max-height:92%;
+  width:auto;height:auto;
+  object-fit:contain;
+  transition:transform .22s;
+}
 .p-chip:hover img{transform:scale(1.1)}
-.p-chip-name{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;letter-spacing:.01em}
+.p-chip-fallback{
+  font-family:'DM Sans',sans-serif;
+  font-size:12.5px;font-weight:700;color:var(--mist);
+  text-align:center;letter-spacing:.01em;
+}
+
+/* Optional: subtle "tooltip" on tap/hover for accessibility since names are hidden */
+.p-chip::after{
+  content:attr(title);
+  position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;font-size:10.5px;font-weight:600;
+  padding:4px 10px;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .18s,bottom .18s;
+  z-index:3;
+}
+.p-chip:hover::after{opacity:1;bottom:-26px}
+
+@media(max-width:1024px){
+  .partners-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:12px}
+  .p-chip{padding:8px 10px;border-radius:12px}
+}
+@media(max-width:768px){
+  .partners-sec{padding:56px 5vw}
+  .partners-grid{grid-template-columns:repeat(4,1fr);gap:10px}
+  .p-chip{padding:6px 8px;border-radius:10px}
+  .p-chip::after{display:none} /* no hover tooltips on touch devices */
+}
+@media(max-width:540px){
+  .partners-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .p-chip{padding:4px 6px;border-radius:8px}
+}
 
 /* ── CTA ── */
 .cta-sec{background:var(--grad);padding:90px 5vw;text-align:center;position:relative;overflow:hidden}
@@ -597,6 +642,9 @@ footer{background:#060810;padding:56px 5vw 24px}
   .hero-trust{gap:20px}
   .about-badge{bottom:-10px;right:-4px}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .partners-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .p-chip{padding:0 12px;height:52px;gap:6px}
+  .p-chip-name{font-size:11px}
 }
 `;
 
@@ -949,15 +997,19 @@ export default function VCNPLPage() {
             <p>We work directly with industry-leading manufacturers to deliver authentic, high-performance solutions.</p>
           </div>
         </div>
-        <div className="partners-grid-wrap">
+        <div className="inner">
           <div className="partners-grid">
             {PARTNERS.map((p, i) => (
-              <div key={i} className="p-chip">
+              <div key={i} className="p-chip" title={p.name}>
                 {p.logo
-                  ? <img src={p.logo} alt={p.name} onError={e => { e.currentTarget.style.display = 'none' }} />
-                  : null
+                  ? <img
+                    src={p.logo}
+                    alt={p.name}
+                    loading="lazy"
+                    onError={e => { e.currentTarget.closest('.p-chip').style.display = 'none'; }}
+                  />
+                  : <span className="p-chip-fallback">{p.name}</span>
                 }
-                <span className="p-chip-name">{p.name}</span>
               </div>
             ))}
           </div>
