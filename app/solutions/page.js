@@ -1,102 +1,61 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from 'next/link';
 
 const solutionGroups = [
   {
-    title: 'Test & Measurement Equipment',
-    items: [
-      'Electronic test instruments',
-      'Calibration equipment',
-      'RF and communication test equipment',
-      'Multimeters',
-      'Oscilloscopes',
-      'Spectrum analyzers',
-      'Signal generators',
-      'Power analyzers',
-      'Environmental and industrial testing equipment',
-      'Other specialized testing equipment',
-    ],
+    title: 'Enterprise Networking',
+    items: ['Router', 'Switches', 'Cabling & Wi-Fi', 'RF link', 'End-to-end solution delivery', 'Soldering and De-soldering station']
   },
   {
-    title: 'Networking & IT Infrastructure',
-    items: [
-      'Switches',
-      'Routers',
-      'Wireless access points',
-      'Network security appliances',
-      'Structured cabling solutions',
-      'Data center networking equipment',
-      'Network monitoring and management solutions',
-    ],
+    title: 'CCTV & PA (Public announcement) System',
+    items: ['IP Cameras (Bullet, Dome, PTZ)', 'Network Video Recorders (NVR)', 'Video Management Software (VMS)', 'Video Analytics', 'Surveillance Storage']
   },
   {
-    title: 'Audio-Visual (AV) Systems',
-    items: [
-      'LED displays',
-      'Video walls',
-      'Interactive flat panels',
-      'Projectors and projection systems',
-      'Video conferencing systems',
-      'Digital signage solutions',
-      'AV control systems',
-    ],
+    title: 'Access Control',
+    items: ['Biometric Scanners', 'RFID Card Readers', 'Turnstiles & Flap Barriers', 'Visitor Management', 'Door Interlocking Systems']
   },
   {
-    title: 'Public Address (PA) Systems',
-    items: [
-      'Amplifiers',
-      'Speakers',
-      'Microphones',
-      'Paging systems',
-      'Conference and discussion systems',
-      'Emergency voice evacuation systems',
-    ],
+    title: 'Video Conferencing',
+    items: ['PTZ Cameras', 'Speakerphones & Microphones', 'All-in-One VC Soundbars', 'Wireless Presentation Systems', 'Room Booking Solutions']
   },
   {
-    title: 'CCTV & Security Solutions',
-    items: [
-      'IP cameras',
-      'PTZ cameras',
-      'Network video recorders (NVRs)',
-      'Digital video recorders (DVRs)',
-      'Video management software (VMS)',
-      'Access control systems',
-      'Surveillance storage solutions',
-    ],
+    title: 'Audio Visual Solutions',
+    items: ['Projectors & Screens', 'Digital Signage', 'AV Matrix Switchers', 'Video Processors', 'Control Systems']
   },
   {
-    title: 'Computing & Electronics',
-    items: [
-      'Laptops',
-      'Desktop computers',
-      'Workstations',
-      'Monitors and displays',
-      'Printers and peripherals',
-      'Tablets and handheld devices',
-    ],
+    title: 'PA System',
+    items: ['Amplifiers & Mixers', 'Ceiling & Wall Speakers', 'Horn Speakers', 'Paging Microphones', 'Voice Evacuation Systems']
   },
   {
-    title: 'Power Solutions',
-    items: [
-      'UPS systems',
-      'Industrial UPS',
-      'Online UPS',
-      'Batteries',
-      'Battery banks',
-      'Power backup solutions',
-      'Power distribution units (PDUs)',
-    ],
+    title: 'WiFi Solutions',
+    items: ['Indoor Access Points', 'Outdoor Access Points', 'Wireless LAN Controllers', 'Point-to-Point Wireless', 'Guest WiFi Management']
   },
   {
-    title: 'Office Infrastructure',
-    items: [
-      'Modular office furniture',
-      'Workstations',
-      'Executive furniture',
-      'Conference room furniture',
-      'Storage solutions',
-      'Complete office setup solutions',
-    ],
+    title: 'Data Center',
+    items: ['Server & Network Racks', 'Intelligent PDUs', 'Precision Cooling Systems', 'Data Center UPS', 'Environmental Monitoring']
   },
+  {
+    title: 'Interactive Panels',
+    items: ['Interactive Flat Panels', 'Smart Whiteboards', 'OPS Modules', 'Mobile Stands', 'Interactive Software']
+  },
+  {
+    title: 'LED Display',
+    items: ['Indoor LED Video Walls', 'Outdoor LED Displays', 'Transparent LED', 'Flexible LED Screens', 'LED Controllers']
+  },
+  {
+    title: 'Smart Classrooms',
+    items: ['Digital Podiums', 'Lecture Capture Systems', 'Document Cameras', 'Classroom Audio Systems', 'Student Response Systems']
+  },
+  {
+    title: 'Command & Control Centers',
+    items: ['Video Wall Controllers', 'Operator Consoles & Furniture', 'KVM Switches', 'Crisis Management Software', 'Visualization Solutions']
+  },
+  {
+    title: 'Test equipments',
+    items: ['Oscilloscopes', 'Spectrum Analyzers', 'Signal Generators', 'Multimeters', 'Power Analyzers', 'Soldering and De-soldering station']
+  }
 ];
 
 const integrationServices = [
@@ -111,12 +70,34 @@ const integrationServices = [
 ];
 
 const heroStats = [
-  { value: '8', label: 'Product Categories', detail: 'From test equipment to office infrastructure' },
+  { value: '13', label: 'Product Categories', detail: 'From networking to command centers' },
   { value: 'OEM', label: 'Direct Sourcing', detail: 'Authorised partnerships with leading manufacturers' },
   { value: 'End-to-End', label: 'Integration', detail: 'Specification through commissioning & support' },
 ];
 
+function useScrollReveal() {
+  useEffect(() => {
+    const targets = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger');
+    if (!targets.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            observer.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    targets.forEach(t => observer.observe(t));
+    return () => observer.disconnect();
+  });
+}
+
 export default function SolutionsPage() {
+  useScrollReveal();
+
   return (
     <>
       <section className="solutions-hero">
@@ -152,21 +133,21 @@ export default function SolutionsPage() {
         </div>
       </section>
 
-      <section className="section" style={{ background: 'var(--fog)' }}>
+      <section className="section" style={{ background: 'var(--fog-warm)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: 44 }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="tag" style={{ marginBottom: 14 }}>What We Deliver</div>
-            <h2 style={{ fontSize: 'clamp(28px,4vw,42px)' }}>Products Across Eight Core Categories</h2>
+            <h2 style={{ fontSize: 'clamp(28px,4vw,42px)' }}>Products Across 13 Core Categories</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 22 }}>
+          <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 22 }}>
             {solutionGroups.map((group) => (
-              <article key={group.title} className="card" style={{ padding: '28px 28px 24px' }}>
-                <h3 style={{ fontSize: 24, marginBottom: 14 }}>{group.title}</h3>
+              <article key={group.title} className="card" style={{ padding: '30px 28px 26px' }}>
+                <h3 style={{ fontSize: 22, marginBottom: 16, fontFamily: 'var(--font-display)' }}>{group.title}</h3>
                 <ul style={{ listStyle: 'none', display: 'grid', gap: 10 }}>
                   {group.items.map((item) => (
                     <li key={item} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', color: 'var(--slate)' }}>
-                      <span style={{ marginTop: 9, width: 6, height: 6, borderRadius: '50%', background: 'var(--gold)', flexShrink: 0 }} />
+                      <span style={{ marginTop: 9, width: 6, height: 6, borderRadius: '50%', background: 'var(--blue)', flexShrink: 0 }} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -179,22 +160,25 @@ export default function SolutionsPage() {
 
       <section className="section" style={{ background: 'var(--ink)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: 44 }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="tag" style={{ marginBottom: 14 }}>Integration Services</div>
             <h2 style={{ color: 'var(--white)', fontSize: 'clamp(28px,4vw,42px)' }}>
               End-to-End System Integration
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 2, borderRadius: 18, overflow: 'hidden', border: '1px solid rgba(255,255,255,.08)' }}>
+          <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 2, borderRadius: 'var(--radius-xl)', overflow: 'hidden', border: '1px solid rgba(255,255,255,.06)' }}>
             {integrationServices.map((item) => (
-              <div key={item} style={{ background: 'rgba(255,255,255,.03)', padding: 20 }}>
-                <div style={{ color: 'rgba(255,255,255,.78)', lineHeight: 1.65 }}>{item}</div>
+              <div key={item} style={{ background: 'rgba(255,255,255,.03)', padding: 22, transition: 'background 0.3s ease' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,.06)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,.03)'}
+              >
+                <div style={{ color: 'rgba(255,255,255,.78)', lineHeight: 1.65, fontSize: 14.5 }}>{item}</div>
               </div>
             ))}
           </div>
 
-          <div style={{ marginTop: 36, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 14 }}>
+          <div className="reveal" style={{ marginTop: 40, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 14 }}>
             <Link href="/industries" className="btn btn-outline">View Industries</Link>
             <Link href="/contact" className="btn btn-primary">Request Consultation</Link>
           </div>
@@ -205,20 +189,22 @@ export default function SolutionsPage() {
         .solutions-hero {
           position: relative;
           overflow: hidden;
-          padding: 120px 0 80px;
-          background: linear-gradient(180deg, #f6f8fc 0%, #ffffff 100%);
-          border-bottom: 1px solid #e4e8f0;
+          padding: 130px 0 84px;
+          background: linear-gradient(168deg, #f6f8fd 0%, #ffffff 40%, #f0f4fb 100%);
+          border-bottom: 1px solid rgba(10,14,26,0.04);
         }
         .solutions-hero-bg {
           position: absolute;
           inset: 0;
           background-image:
-            radial-gradient(circle at 85% 15%, rgba(26, 111, 255, 0.06) 0%, transparent 42%),
-            radial-gradient(circle at 10% 80%, rgba(201, 168, 76, 0.08) 0%, transparent 38%),
-            linear-gradient(rgba(10, 13, 20, 0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(10, 13, 20, 0.04) 1px, transparent 1px);
-          background-size: auto, auto, 48px 48px, 48px 48px;
+            radial-gradient(circle at 85% 15%, rgba(59,108,245,0.05) 0%, transparent 42%),
+            radial-gradient(circle at 10% 80%, rgba(212,168,67,0.06) 0%, transparent 38%),
+            linear-gradient(rgba(10,14,26,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(10,14,26,0.025) 1px, transparent 1px);
+          background-size: auto, auto, 56px 56px, 56px 56px;
           pointer-events: none;
+          mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 0%, transparent 70%);
+          -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 0%, transparent 70%);
         }
         .solutions-hero-inner { position: relative; z-index: 1; }
         .solutions-hero-grid {
@@ -227,50 +213,60 @@ export default function SolutionsPage() {
           gap: 56px;
           align-items: center;
         }
-        .solutions-hero-content .tag { margin-bottom: 20px; }
+        .solutions-hero-content .tag { margin-bottom: 22px; }
         .solutions-hero-content h1 {
-          font-size: clamp(34px, 4.5vw, 52px);
-          font-weight: 800;
+          font-size: clamp(32px, 4.5vw, 50px);
+          font-weight: 700;
           color: var(--ink);
           max-width: 620px;
           margin-bottom: 22px;
-          line-height: 1.12;
+          line-height: 1.1;
+          letter-spacing: -0.035em;
+          animation: fadeUp 0.7s cubic-bezier(0,0,0.2,1) both;
         }
-        .solutions-hero-accent { color: var(--gold); }
+        .solutions-hero-accent {
+          background: linear-gradient(135deg, var(--blue) 0%, #7c3aed 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
         .solutions-hero-lead {
-          font-size: 18px;
-          color: var(--slate);
+          font-size: 16.5px;
+          color: var(--mist);
           max-width: 560px;
-          line-height: 1.75;
-          margin-bottom: 32px;
+          line-height: 1.8;
+          margin-bottom: 34px;
+          animation: fadeUp 0.7s cubic-bezier(0,0,0.2,1) 0.1s both;
         }
         .solutions-hero-actions {
           display: flex;
           flex-wrap: wrap;
           gap: 14px;
+          animation: fadeUp 0.7s cubic-bezier(0,0,0.2,1) 0.2s both;
         }
         .solutions-hero-stats {
           display: flex;
           flex-direction: column;
           gap: 14px;
+          animation: fadeInRight 0.8s cubic-bezier(0,0,0.2,1) 0.2s both;
         }
         .solutions-stat-card {
           background: var(--white);
-          border: 1px solid #e4e8f0;
+          border: 1px solid rgba(10,14,26,0.05);
           border-radius: var(--radius-lg);
-          padding: 22px 24px;
-          box-shadow: 0 4px 24px rgba(10, 13, 20, 0.04);
-          transition: border-color 0.25s ease, box-shadow 0.25s ease;
+          padding: 24px 26px;
+          box-shadow: var(--shadow-sm);
+          transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
         }
         .solutions-stat-card:hover {
-          border-color: rgba(201, 168, 76, 0.45);
-          box-shadow: 0 8px 32px rgba(10, 13, 20, 0.07);
+          border-color: rgba(59,108,245,0.2);
+          box-shadow: var(--shadow-md);
+          transform: translateY(-3px);
         }
         .solutions-stat-value {
           font-family: var(--font-display);
-          font-size: 28px;
-          font-weight: 800;
-          color: var(--ink);
+          font-size: 30px;
+          font-weight: 700;
+          color: var(--blue);
           line-height: 1;
           margin-bottom: 6px;
         }
@@ -288,7 +284,7 @@ export default function SolutionsPage() {
         }
 
         @media (max-width: 960px) {
-          .solutions-hero { padding: 100px 0 64px; }
+          .solutions-hero { padding: 110px 0 64px; }
           .solutions-hero-grid { grid-template-columns: 1fr; gap: 40px; }
           .solutions-hero-stats {
             display: grid;
