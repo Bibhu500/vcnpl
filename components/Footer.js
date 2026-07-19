@@ -13,7 +13,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="vcn-footer-brand">
-              <img src="/vcn_logo_with_tagline_squaresize.jpeg" alt="Visual Connect Network Pvt. Ltd." />
+              <img src="/vcn_logo_without_tagline_horizontalsize.png" alt="Visual Connect Networks Pvt. Ltd." />
             </div>
             <p className="vcn-footer-desc">
               System integrators delivering tailored technology solutions — from CCTV and AV to networking, test equipment, and end-to-end infrastructure.

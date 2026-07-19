@@ -20,16 +20,16 @@ export const metadata = {
   keywords: 'CCTV solutions, AV systems, network infrastructure, system integrator, PA systems, test equipment, India',
   icons: {
     icon: [
-      { url: '/vcn_logo_with_tagline_squaresize.jpeg' },
+      { url: '/vcn_logo_with_tagline_squaresize.png' },
     ],
-    shortcut: '/vcn_logo_with_tagline_squaresize.jpeg',
-    apple: '/vcn_logo_with_tagline_squaresize.jpeg',
+    shortcut: '/vcn_logo_with_tagline_squaresize.png',
+    apple: '/vcn_logo_with_tagline_squaresize.png',
   },
   openGraph: {
     title: 'Visual Connect Network Pvt. Ltd.',
     description: 'Enterprise technology integration — CCTV, AV, networking, PA systems & infrastructure.',
     siteName: 'Visual Connect Network Pvt. Ltd.',
-    images: [{ url: '/vcn_logo_with_tagline_squaresize.jpeg' }],
+    images: [{ url: '/vcn_logo_with_tagline_squaresize.png' }],
   },
 };
 

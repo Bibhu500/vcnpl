@@ -190,7 +190,7 @@ export default function SolutionsPage() {
           position: relative;
           overflow: hidden;
           padding: 130px 0 84px;
-          background: linear-gradient(168deg, #f6f8fd 0%, #ffffff 40%, #f0f4fb 100%);
+          background: linear-gradient(168deg, #f0fbff 0%, #e0f7fe 40%, #f0fbff 100%);
           border-bottom: 1px solid rgba(10,14,26,0.04);
         }
         .solutions-hero-bg {
