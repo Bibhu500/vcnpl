@@ -199,6 +199,8 @@ export default function VCNPLPage() {
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [activeTier, setActiveTier] = useState(1);
   const [expandedSolution, setExpandedSolution] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const { scrollYProgress } = useScroll();
   const heroParallax = useTransform(scrollYProgress, [0, 0.15], [0, -60]);
 
@@ -314,7 +316,7 @@ export default function VCNPLPage() {
                   Explore Solutions
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
                 </a>
-                <a href="#contact" className="btn-ghost btn-lg" onClick={(e) => { e.preventDefault(); goto('contact'); }}>Request Consultation</a>
+                <a href="#contact" className="btn-ghost btn-lg" onClick={(e) => { e.preventDefault(); setModalOpen(true); }}>Request Consultation</a>
               </motion.div>
 
               <motion.div className="hero-stats" initial="hidden" animate="show" variants={stagger} transition={{ delayChildren: 0.4 }}>
@@ -630,7 +632,7 @@ export default function VCNPLPage() {
             <h2>Let&apos;s Build Your Ideal Solution</h2>
             <p>Share your requirements and we&apos;ll craft a precise technical specification with the right products and partners.</p>
             <div className="cta-btns">
-              <a href="mailto:sales@vcnpl.net" className="btn-signal btn-lg">✉️ Request Free Consultation</a>
+              <a href="#contact" className="btn-signal btn-lg" onClick={(e) => { e.preventDefault(); setModalOpen(true); }}>✉️ Request Free Consultation</a>
               <a href="tel:+919876596016" className="btn-ghost btn-lg light">📞 +91 98765 96016</a>
             </div>
           </Reveal>
@@ -702,6 +704,104 @@ export default function VCNPLPage() {
         </div>
       </a>
 
+      {/* ── ENQUIRY MODAL DIALOG ── */}
+      <AnimatePresence>
+        {modalOpen && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => { setModalOpen(false); setFormSubmitted(false); }}
+          >
+            <motion.div
+              className="modal-card brk"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close" onClick={() => { setModalOpen(false); setFormSubmitted(false); }} aria-label="Close modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+
+              {!formSubmitted ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setFormSubmitted(true);
+                  }}
+                  className="enquiry-form"
+                >
+                  <div className="form-head">
+                    <span className="mono-chip">Enquiry Form</span>
+                    <h3>Request Consultation</h3>
+                    <p>Provide your details below and our solution specialists will reach out to you.</p>
+                  </div>
+                  
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label htmlFor="eq-name">Full Name *</label>
+                      <input type="text" id="eq-name" required placeholder="John Doe" />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="eq-email">Business Email *</label>
+                      <input type="email" id="eq-email" required placeholder="john@company.com" />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="eq-phone">Phone Number *</label>
+                      <input type="tel" id="eq-phone" required placeholder="+91 XXXXX XXXXX" />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="eq-company">Company / Organization</label>
+                      <input type="text" id="eq-company" placeholder="Visual Connect Networks" />
+                    </div>
+                    <div className="form-group full-width">
+                      <label htmlFor="eq-solution">Solutions Required *</label>
+                      <select id="eq-solution" required defaultValue="">
+                        <option value="" disabled>Select a core solution...</option>
+                        {SOLUTIONS.map(s => <option key={s.title} value={s.title}>{s.title}</option>)}
+                        <option value="Other">Other / Infrastructure Sourcing</option>
+                      </select>
+                    </div>
+                    <div className="form-group full-width">
+                      <label htmlFor="eq-msg">Brief Project Scope / Message *</label>
+                      <textarea id="eq-msg" required rows="3" placeholder="Tell us about your requirements..."></textarea>
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn-signal btn-lg full-width" style={{ marginTop: '16px', justifyContent: 'center' }}>
+                    Submit Enquiry
+                  </button>
+                </form>
+              ) : (
+                <motion.div
+                  className="form-success"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="success-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <h3>Thank You!</h3>
+                  <p>Your enquiry has been successfully submitted. Our solution design team will contact you within 24 hours.</p>
+                  <button onClick={() => { setModalOpen(false); setFormSubmitted(false); }} className="btn-ghost btn-lg" style={{ marginTop: '12px' }}>
+                    Close Window
+                  </button>
+                </motion.div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <style>{CSS}</style>
     </div>
   );
@@ -711,14 +811,14 @@ export default function VCNPLPage() {
 const CSS = `
 .vcn{
   /* ── ONE THEME, USED THROUGHOUT — light space base + cyan→violet→amber signal gradient ── */
-  --void:#F5F7FA; --void-soft:#FFFFFF; --void-alt:#E8ECF2;
+  --void:#E2E6EE; --void-soft:#FFFFFF; --void-alt:#D0D6E2;
   --panel:rgba(11,15,25,.035); --panel-hover:rgba(11,15,25,.065);
   --line:rgba(11,15,25,.09); --line-bright:rgba(11,15,25,.18);
-  --cyan:#5EEAD4; --violet:#8B7CF6; --amber:#F0A857;
+  --cyan:#0891B2; --violet:#6D28D9; --amber:#B45309;
   --grad-signal:linear-gradient(120deg,var(--cyan),var(--violet) 55%,var(--amber));
-  --grad-signal-soft:linear-gradient(120deg,rgba(94,234,212,.35),rgba(139,124,246,.25) 55%,rgba(240,168,87,.25));
-  --grad-cta:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(139,124,246,.12),transparent 65%),linear-gradient(180deg,#F5F7FA,#E8ECF2);
-  --text-hi:#0B0F19; --text-mid:rgba(11,15,25,.72); --text-dim:rgba(11,15,25,.48);
+  --grad-signal-soft:linear-gradient(120deg,rgba(8,145,178,.14),rgba(109,40,217,.12) 55%,rgba(180,83,9,.12));
+  --grad-cta:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(109,40,217,.12),transparent 65%),linear-gradient(180deg,#E2E6EE,#D0D6E2);
+  --text-hi:#0B0F19; --text-mid:rgba(11,15,25,.8); --text-dim:rgba(11,15,25,.54);
   --radius-sm:8px; --radius:16px; --radius-lg:24px; --radius-pill:999px;
   --shadow-sm:0 2px 20px rgba(0,0,0,.06); --shadow-md:0 18px 46px rgba(0,0,0,.08);
   --shadow-lg:0 30px 70px rgba(0,0,0,.1); --shadow-glow:0 0 0 1px rgba(139,124,246,.12),0 18px 46px rgba(139,124,246,.05);
@@ -808,8 +908,8 @@ const CSS = `
 .vcn .btn-lg{font-size:13.5px;padding:13px 22px;border-radius:10px}
 .vcn .btn-ghost{background:var(--panel);color:var(--text-hi);font-weight:600;border:1.5px solid var(--line);text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .25s var(--ease);backdrop-filter:blur(10px)}
 .vcn .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px);box-shadow:0 8px 20px rgba(94,234,212,.15)}
-.vcn .btn-ghost.light{background:transparent;color:#fff;border-color:rgba(255,255,255,.22)}
-.vcn .btn-ghost.light:hover{background:rgba(255,255,255,.06);border-color:var(--cyan)}
+.vcn .btn-ghost.light{background:transparent;color:var(--text-hi);border-color:var(--line)}
+.vcn .btn-ghost.light:hover{background:var(--panel-hover);border-color:var(--cyan)}
 .vcn .hero-stats{display:flex;gap:0;flex-wrap:wrap;padding-top:22px;border-top:1px solid var(--line)}
 .vcn .hero-stat{padding:0 20px 0 0;margin-right:20px;border-right:1px solid var(--line)}
 .vcn .hero-stat:last-child{border-right:none}
@@ -1145,5 +1245,136 @@ const CSS = `
     font-size: 9px;
     padding: 5px 10px;
   }
+}
+
+/* MODAL & FORM STYLE */
+.vcn .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 15, 25, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.vcn .modal-card {
+  width: 100%;
+  max-width: 580px;
+  background: var(--void-soft);
+  border: 1px solid var(--line-bright);
+  border-radius: var(--radius-lg);
+  padding: 34px 28px;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+}
+.vcn .modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease);
+}
+.vcn .modal-close:hover {
+  background: var(--panel-hover);
+  color: var(--text-hi);
+}
+.vcn .enquiry-form .form-head {
+  margin-bottom: 24px;
+  text-align: center;
+}
+.vcn .enquiry-form .form-head h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 8px;
+  color: var(--text-hi);
+}
+.vcn .enquiry-form .form-head p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.vcn .form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 480px) {
+  .vcn .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .vcn .form-group.full-width {
+    grid-column: span 2;
+  }
+}
+.vcn .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.vcn .form-group label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+.vcn .form-group input,
+.vcn .form-group select,
+.vcn .form-group textarea {
+  background: var(--void);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: var(--text-hi);
+  font-family: inherit;
+  transition: all 0.2s var(--ease);
+}
+.vcn .form-group input:focus,
+.vcn .form-group select:focus,
+.vcn .form-group textarea:focus {
+  outline: none;
+  border-color: var(--cyan);
+  background: var(--void-soft);
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.15);
+}
+.vcn .form-success {
+  text-align: center;
+  padding: 30px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.vcn .success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, 0.1);
+  color: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.vcn .form-success h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-hi);
+}
+.vcn .form-success p {
+  font-size: 13.5px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  max-width: 320px;
 }
 `;
