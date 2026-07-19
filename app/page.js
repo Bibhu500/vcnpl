@@ -198,6 +198,7 @@ export default function VCNPLPage() {
   const [showProducts, setShowProducts] = useState(false);
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [activeTier, setActiveTier] = useState(1);
+  const [expandedSolution, setExpandedSolution] = useState(null);
   const { scrollYProgress } = useScroll();
   const heroParallax = useTransform(scrollYProgress, [0, 0.15], [0, -60]);
 
@@ -242,8 +243,16 @@ export default function VCNPLPage() {
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" width="13" height="13"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
           </a>
           <button className="ham-btn brk" onClick={() => setMenuOpen(v => !v)} aria-label="Menu" aria-expanded={menuOpen}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {menuOpen ? <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></> : <><line x1="3" y1="7" x2="21" y2="7" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="17" x2="21" y2="17" /></>}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              {menuOpen ? (
+                <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
+              ) : (
+                <>
+                  <circle cx="12" cy="5" r="1.8" fill="currentColor" />
+                  <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+                  <circle cx="12" cy="19" r="1.8" fill="currentColor" />
+                </>
+              )}
             </svg>
           </button>
         </nav>
@@ -350,18 +359,74 @@ export default function VCNPLPage() {
             <p>One partner, eight core solution areas, zero compromise — from networking to smart buildings.</p>
           </Reveal>
           <Stagger className="g4">
-            {SOLUTIONS.map((s, i) => (
-              <motion.div key={s.title} className="sol-card brk" variants={fadeScale} whileHover={{ y: -8 }}>
-                <div className="sol-top">
-                  <div className="sol-icon">{s.icon}</div>
-                  <span className="idx-tag">{String(i + 1).padStart(2, '0')}/{SOLUTIONS.length}</span>
-                </div>
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
-                <span className="trace" />
-                <span className="sol-glow" />
-              </motion.div>
-            ))}
+            {SOLUTIONS.map((s, i) => {
+              const isOpen = expandedSolution === s.title;
+              const relatedGroup = PRODUCT_GROUPS.find(g => g.title.toLowerCase() === s.title.toLowerCase());
+              return (
+                <motion.div
+                  key={s.title}
+                  layout="position"
+                  className={`sol-card brk ${isOpen ? 'expanded' : ''}`}
+                  variants={fadeScale}
+                  whileHover={{ y: isOpen ? 0 : -8 }}
+                  onClick={() => setExpandedSolution(isOpen ? null : s.title)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpandedSolution(isOpen ? null : s.title); } }}
+                >
+                  <div className="sol-top">
+                    <div className="sol-icon">{s.icon}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="idx-tag">{String(i + 1).padStart(2, '0')}/{SOLUTIONS.length}</span>
+                      <motion.svg
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.25, ease }}
+                        width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+                        style={{ color: isOpen ? 'var(--cyan)' : 'var(--text-dim)', flexShrink: 0 }}
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </motion.svg>
+                    </div>
+                  </div>
+                  <h3>{s.title}</h3>
+                  <p>{s.desc}</p>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && relatedGroup && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <div className="sol-dropdown">
+                          {relatedGroup.img && (
+                            <div className="sol-dropdown-img">
+                              <img src={relatedGroup.img} alt={relatedGroup.title} loading="lazy" />
+                            </div>
+                          )}
+                          <div className="sol-dropdown-list">
+                            <h4>Key Offerings</h4>
+                            <ul>
+                              {relatedGroup.items.map((item) => (
+                                <li key={item}>
+                                  <span className="pdot" />
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <span className="trace" />
+                  <span className="sol-glow" />
+                </motion.div>
+              );
+            })}
           </Stagger>
           <Reveal className="center-btn-wrap">
             <button className="btn-ghost btn-lg" onClick={() => { setShowProducts(p => !p); setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 120); }}>
@@ -427,7 +492,6 @@ export default function VCNPLPage() {
           <div className="about-grid">
             <Reveal as={motion.div} className="about-img-wrap brk" variant={slideLeft}>
               <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=900&q=80" alt="VCNPL Team" loading="lazy" />
-              <div className="about-badge"><div className="val">500+</div><div className="lbl">Projects Delivered</div></div>
             </Reveal>
             <Reveal as={motion.div} className="about-copy" variant={slideRight} delay={0.1}>
               <Kicker text="About Us" />
@@ -467,33 +531,7 @@ export default function VCNPLPage() {
         </div>
       </section>
 
-      {/* ── NEW: DEPLOYMENT PORTFOLIO ── */}
-      <section className="sec" id="portfolio">
-        <div className="inner">
-          <Reveal className="sec-head">
-            <Kicker text="Deployment Portfolio" />
-            <h2>What We&apos;ve Actually Shipped</h2>
-            <p>Representative deployments across sectors — scoped, delivered, and supported end-to-end.</p>
-          </Reveal>
-          <Stagger className="portfolio-grid">
-            {PORTFOLIO.map(p => (
-              <motion.div key={p.title} className="portfolio-card brk" variants={fadeUp} whileHover={{ y: -6 }}>
-                <div className="portfolio-top">
-                  <span className="portfolio-icon">{p.icon}</span>
-                  <span className="portfolio-sector">{p.sector}</span>
-                </div>
-                <h3>{p.title}</h3>
-                <p className="portfolio-scope">{p.scope}</p>
-                <div className="portfolio-metrics">
-                  <div className="pm"><span className="pm-v">{p.metric1.v}</span><span className="pm-l">{p.metric1.l}</span></div>
-                  <div className="pm"><span className="pm-v">{p.metric2.v}</span><span className="pm-l">{p.metric2.l}</span></div>
-                  <div className="pm"><span className="pm-v">{p.metric3.v}</span><span className="pm-l">{p.metric3.l}</span></div>
-                </div>
-              </motion.div>
-            ))}
-          </Stagger>
-        </div>
-      </section>
+
 
       {/* ── PROCESS ── */}
       <section className="sec sec-alt" id="process">
@@ -561,39 +599,7 @@ export default function VCNPLPage() {
         </div>
       </section>
 
-      {/* ── NEW: SUPPORT & SLA ── */}
-      <section className="sec sec-alt" id="support">
-        <div className="inner">
-          <Reveal className="sec-head">
-            <Kicker text="After You Go Live" dark />
-            <h2>Support &amp; SLA Tiers</h2>
-            <p>Infrastructure only earns trust if it stays up. Pick the response window your operation needs.</p>
-          </Reveal>
-          <div className="tier-tabs">
-            {SUPPORT_TIERS.map((t, i) => (
-              <button key={t.name} className={`tier-tab${activeTier === i ? ' active' : ''}`} onClick={() => setActiveTier(i)}>{t.name}</button>
-            ))}
-          </div>
-          <AnimatePresence mode="wait">
-            <motion.div key={activeTier} className="tier-panel brk" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.35, ease }}>
-              <div className="tier-head">
-                <div>
-                  <h3>{SUPPORT_TIERS[activeTier].name}</h3>
-                  <span className="tier-tag">{SUPPORT_TIERS[activeTier].tag}</span>
-                </div>
-                <div className="tier-response"><span className="tier-response-v">{SUPPORT_TIERS[activeTier].response}</span><span className="tier-response-l">Response time</span></div>
-              </div>
-              <div className="tier-grid">
-                <div className="tier-stat"><span className="tier-stat-l">Support Window</span><span className="tier-stat-v">{SUPPORT_TIERS[activeTier].window}</span></div>
-                <div className="tier-stat"><span className="tier-stat-l">Preventive Visits</span><span className="tier-stat-v">{SUPPORT_TIERS[activeTier].visits}</span></div>
-              </div>
-              <ul className="tier-coverage">
-                {SUPPORT_TIERS[activeTier].coverage.map(c => <li key={c}><span className="idot" />{c}</li>)}
-              </ul>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </section>
+
 
       {/* ── PARTNERS ── */}
       <section className="partners-sec" id="partners">
@@ -686,6 +692,16 @@ export default function VCNPLPage() {
         </div>
       </footer>
 
+      {/* ── FLOATING WHATSAPP CHAT ── */}
+      <a href="https://wa.me/919876596016" target="_blank" rel="noopener noreferrer" className="wa-float" aria-label="Chat on WhatsApp">
+        <span className="wa-text">chat with us</span>
+        <div className="wa-icon-wrap">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.233-1.371a9.936 9.936 0 0 0 4.779 1.22h.004c5.505 0 9.99-4.478 9.99-9.985C22.007 6.478 17.519 2 12.012 2zm5.845 14.286c-.241.677-1.398 1.325-1.921 1.401-.475.068-.962.336-3.045-.526-2.666-1.102-4.385-3.821-4.518-3.997-.133-.176-1.085-1.442-1.085-2.75 0-1.309.684-1.95 1.085-2.366.241-.25.532-.315.7-.315.176 0 .347.002.497.009.158.007.37-.058.577.443.208.508.708 1.729.77 1.854.062.126.104.271.02.439-.084.167-.126.27-.25.416-.124.147-.26.327-.37.44-.124.125-.254.26-.109.508.145.248.647 1.066 1.385 1.722.954.848 1.758 1.11 2.008 1.235.25.124.394.103.541-.067.147-.17.625-.726.791-.973.167-.247.332-.207.562-.122.229.085 1.455.687 1.705.812.25.125.416.187.478.293.062.106.062.616-.179 1.293z" />
+          </svg>
+        </div>
+      </a>
+
       <style>{CSS}</style>
     </div>
   );
@@ -752,10 +768,10 @@ const CSS = `
 
 /* NAV */
 .vcn .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:center;padding:12px 14px 0}
-.vcn .nav{width:100%;max-width:1080px;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:6px;background:rgba(8,11,20,.6);backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--radius);height:56px;padding:0 8px 0 14px;transition:all .35s var(--ease)}
+.vcn .nav{width:100%;max-width:1080px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px;background:rgba(8,11,20,.6);backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--radius);height:56px;padding:0 8px 0 14px;transition:all .35s var(--ease)}
 .vcn .nav.scrolled{background:rgba(8,11,20,.88);box-shadow:var(--shadow-md);border-color:var(--line-bright)}
-.vcn .nav-logo{background:rgba(255,255,255,.9);border:none;cursor:pointer;padding:6px 8px;display:flex;border-radius:8px}
-.vcn .nav-links{display:flex;justify-content:center;gap:2px}
+.vcn .nav-logo{background:rgba(255,255,255,.9);border:none;cursor:pointer;padding:6px 8px;display:flex;border-radius:8px;flex-shrink:0}
+.vcn .nav-links{display:none;justify-content:center;gap:2px}
 .vcn .nav-links a{display:flex;align-items:center;gap:6px;color:var(--text-mid);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:8px;transition:all .2s var(--ease)}
 .vcn .nav-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);opacity:0;transition:opacity .2s var(--ease)}
 .vcn .nav-links a:hover{color:var(--text-hi);background:var(--panel)}
@@ -765,7 +781,7 @@ const CSS = `
 .vcn .btn-signal svg{transition:transform .25s var(--ease)}
 .vcn .btn-signal:hover svg{transform:translateX(2px)}
 .vcn .nav-cta-desktop{display:none}
-.vcn .ham-btn{background:transparent;border:1px solid var(--line);border-radius:9px;cursor:pointer;padding:9px;color:var(--text-hi);display:flex;align-items:center;justify-content:center}
+.vcn .ham-btn{background:transparent;border:1px solid var(--line);border-radius:9px;cursor:pointer;padding:9px;color:var(--text-hi);display:flex;align-items:center;justify-content:center;justify-self:end}
 .vcn .mob-menu{position:fixed;top:74px;left:14px;right:14px;z-index:99;background:rgba(8,11,20,.97);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow-lg)}
 .vcn .mob-menu a{color:var(--text-mid);font-size:15px;font-weight:600;text-decoration:none;padding:13px 16px;border-radius:9px;text-align:center}
 .vcn .mob-menu a:hover{background:var(--panel);color:var(--cyan)}
@@ -813,18 +829,28 @@ const CSS = `
 .vcn .hero-panel-foot strong{color:var(--text-hi)}
 
 /* SOLUTIONS GRID */
-.vcn .g4{display:grid;grid-template-columns:1fr;gap:12px}
-.vcn .sol-card{border-radius:var(--radius);padding:22px 18px;border:1px solid var(--line);background:var(--panel);transition:all .3s var(--ease);overflow:hidden;position:relative;backdrop-filter:blur(10px)}
-.vcn .sol-card:hover{box-shadow:var(--shadow-glow);border-color:var(--line-bright);background:var(--panel-hover)}
+.vcn .g4{display:grid;grid-template-columns:1fr;gap:12px;align-items:start}
+.vcn .sol-card{border-radius:var(--radius);padding:22px 18px;border:1px solid var(--line);background:var(--panel);transition:all .3s var(--ease);overflow:hidden;position:relative;backdrop-filter:blur(10px);cursor:pointer;outline:none}
+.vcn .sol-card:hover, .vcn .sol-card.expanded{box-shadow:var(--shadow-glow);border-color:var(--line-bright);background:var(--panel-hover)}
 .vcn .sol-glow{position:absolute;top:-40%;right:-30%;width:160px;height:160px;background:radial-gradient(circle,rgba(139,124,246,.25),transparent 70%);opacity:0;transition:opacity .4s var(--ease);pointer-events:none}
-.vcn .sol-card:hover .sol-glow{opacity:1}
+.vcn .sol-card:hover .sol-glow, .vcn .sol-card.expanded .sol-glow{opacity:1}
 .vcn .sol-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
 .vcn .sol-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--grad-signal-soft);border:1px solid var(--line)}
 .vcn .idx-tag{font-family:var(--font-mono);font-size:10px;color:var(--text-dim);letter-spacing:.03em;padding-top:4px}
 .vcn .sol-card h3{font-size:13.5px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em;color:var(--text-hi)}
 .vcn .sol-card p{font-size:12px;color:var(--text-dim);line-height:1.6}
 .vcn .sol-card .trace{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--grad-signal);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
-.vcn .sol-card:hover .trace{transform:scaleX(1)}
+.vcn .sol-card:hover .trace, .vcn .sol-card.expanded .trace{transform:scaleX(1)}
+
+/* SOL DROPDOWN */
+.vcn .sol-dropdown{margin-top:20px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:16px;text-align:left}
+.vcn .sol-dropdown-img{width:100%;height:140px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+.vcn .sol-dropdown-img img{width:100%;height:100%;object-fit:cover}
+.vcn .sol-dropdown-list h4{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--cyan);letter-spacing:.06em;margin-bottom:10px;font-family:var(--font-mono)}
+.vcn .sol-dropdown-list ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.vcn .sol-dropdown-list li{font-size:11.5px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.vcn .sol-dropdown-list li .pdot{margin-top:6px}
+
 .vcn .center-btn-wrap{text-align:center;margin-top:30px}
 
 /* PRODUCT CATALOGUE — images fully visible, never cropped */
@@ -955,6 +981,24 @@ const CSS = `
 .vcn .p-chip img{max-width:86%;max-height:86%;object-fit:contain;filter:grayscale(.3) brightness(1.4) opacity(.85);transition:all .3s var(--ease)}
 .vcn .p-chip:hover img{filter:grayscale(0) brightness(1) opacity(1)}
 
+@keyframes float-gentle{
+  0% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-3px) rotate(0.5deg); }
+  50% { transform: translateY(0px) rotate(-0.5deg); }
+  75% { transform: translateY(3px) rotate(0.2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@media(max-width:559px){
+  .vcn .marquee{-webkit-mask-image:none;mask-image:none;overflow:visible;padding:0 4px}
+  .vcn .marquee-track{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;animation:none;padding:0 8px}
+  .vcn .p-chip{width:100%;aspect-ratio:16/10;animation:float-gentle 6s ease-in-out infinite;flex-shrink:1}
+  .vcn .p-chip:nth-child(n+13){display:none}
+  .vcn .p-chip:nth-child(2n){animation-delay:-1.5s;animation-duration:7s}
+  .vcn .p-chip:nth-child(3n){animation-delay:-3s;animation-duration:8s}
+  .vcn .p-chip:nth-child(5n){animation-delay:-4.5s;animation-duration:5.5s}
+}
+
 /* CTA / CONTACT */
 .vcn .cta-sec{background:var(--grad-cta);padding:68px 0;position:relative;overflow:hidden;border-top:1px solid var(--line)}
 .vcn .cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(94,234,212,.08),transparent 65%);pointer-events:none}
@@ -1004,6 +1048,7 @@ const CSS = `
   .vcn .tier-grid{grid-template-columns:1fr 1fr}
 }
 @media(min-width:860px){
+  .vcn .nav{grid-template-columns:auto 1fr auto}
   .vcn .nav-links{display:flex}
   .vcn .nav-cta-desktop{display:inline-flex}
   .vcn .ham-btn{display:none}
@@ -1032,5 +1077,73 @@ const CSS = `
 @media(prefers-reduced-motion:reduce){
   .vcn *{animation-duration:.001s!important;transition-duration:.001s!important}
   .vcn .marquee-track{animation:none}
+}
+
+/* FLOATING WHATSAPP CHAT */
+.vcn .wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.3s var(--ease);
+}
+.vcn .wa-float:hover {
+  transform: translateY(-4px);
+}
+.vcn .wa-text {
+  background: rgba(13, 20, 30, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  color: var(--text-hi);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+.vcn .wa-icon-wrap {
+  width: 48px;
+  height: 48px;
+  background: #25D366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 0 0 1px rgba(37, 211, 102, 0.2);
+  transition: box-shadow 0.3s var(--ease);
+}
+.vcn .wa-float:hover .wa-icon-wrap {
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6), 0 0 0 3px rgba(37, 211, 102, 0.3);
+}
+@media (max-width: 559px) {
+  .vcn .wa-float {
+    bottom: 18px;
+    right: 18px;
+    gap: 8px;
+  }
+  .vcn .wa-icon-wrap {
+    width: 42px;
+    height: 42px;
+  }
+  .vcn .wa-icon-wrap svg {
+    width: 20px;
+    height: 20px;
+  }
+  .vcn .wa-text {
+    font-size: 9px;
+    padding: 5px 10px;
+  }
 }
 `;
