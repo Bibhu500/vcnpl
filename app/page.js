@@ -6,7 +6,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 /* ════════ BRAND ASSETS ════════ */
 const LOGO_H = '/vcn_logo_without_tagline_horizontalsize.jpeg';
 const LOGO_SQ = '/vcn_logo_with_tagline_squaresize.jpeg';
-const COMPANY = 'Visual Connect Network Pvt. Ltd.';
+const COMPANY = 'Visual Connect Networks Pvt. Ltd.';
 
 /* ════════ CONTENT (unchanged from source) ════════ */
 const NAV = ['Solutions', 'About', 'Process', 'Industries', 'Partners', 'Contact'];
@@ -495,7 +495,7 @@ export default function VCNPLPage() {
             </Reveal>
             <Reveal as={motion.div} className="about-copy" variant={slideRight} delay={0.1}>
               <Kicker text="About Us" />
-              <h2>We Are <em>Visual Connect Network</em></h2>
+              <h2>We Are <em>Visual Connect Networks</em></h2>
               <p className="lead">A specialist system integrator understanding end-user requirements and delivering precision-engineered technology solutions across India.</p>
               <h4 className="sub-h">Aligning Technology With Purpose</h4>
               {MISSION_PARAGRAPHS.map((p, i) => <p key={i}>{p}</p>)}
@@ -710,18 +710,18 @@ export default function VCNPLPage() {
 /* ════════ STYLES — mobile-first, single futuristic "signal-grid" theme ════════ */
 const CSS = `
 .vcn{
-  /* ── ONE THEME, USED THROUGHOUT — deep-space base + cyan→violet→amber signal gradient ── */
-  --void:#05070C; --void-soft:#080B14; --void-alt:#0A0E1A;
-  --panel:rgba(255,255,255,.035); --panel-hover:rgba(255,255,255,.06);
-  --line:rgba(150,170,255,.14); --line-bright:rgba(150,170,255,.32);
+  /* ── ONE THEME, USED THROUGHOUT — light space base + cyan→violet→amber signal gradient ── */
+  --void:#F5F7FA; --void-soft:#FFFFFF; --void-alt:#E8ECF2;
+  --panel:rgba(11,15,25,.035); --panel-hover:rgba(11,15,25,.065);
+  --line:rgba(11,15,25,.09); --line-bright:rgba(11,15,25,.18);
   --cyan:#5EEAD4; --violet:#8B7CF6; --amber:#F0A857;
   --grad-signal:linear-gradient(120deg,var(--cyan),var(--violet) 55%,var(--amber));
-  --grad-signal-soft:linear-gradient(120deg,rgba(94,234,212,.16),rgba(139,124,246,.16) 55%,rgba(240,168,87,.16));
-  --grad-cta:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(139,124,246,.22),transparent 65%),linear-gradient(180deg,#05070C,#0A0E1A);
-  --text-hi:#F5F7FC; --text-mid:rgba(245,247,252,.64); --text-dim:rgba(245,247,252,.4);
+  --grad-signal-soft:linear-gradient(120deg,rgba(94,234,212,.35),rgba(139,124,246,.25) 55%,rgba(240,168,87,.25));
+  --grad-cta:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(139,124,246,.12),transparent 65%),linear-gradient(180deg,#F5F7FA,#E8ECF2);
+  --text-hi:#0B0F19; --text-mid:rgba(11,15,25,.72); --text-dim:rgba(11,15,25,.48);
   --radius-sm:8px; --radius:16px; --radius-lg:24px; --radius-pill:999px;
-  --shadow-sm:0 2px 20px rgba(0,0,0,.3); --shadow-md:0 18px 46px rgba(0,0,0,.45);
-  --shadow-lg:0 30px 70px rgba(0,0,0,.55); --shadow-glow:0 0 0 1px rgba(139,124,246,.25),0 18px 46px rgba(139,124,246,.12);
+  --shadow-sm:0 2px 20px rgba(0,0,0,.06); --shadow-md:0 18px 46px rgba(0,0,0,.08);
+  --shadow-lg:0 30px 70px rgba(0,0,0,.1); --shadow-glow:0 0 0 1px rgba(139,124,246,.12),0 18px 46px rgba(139,124,246,.05);
   --ease:cubic-bezier(.16,1,.3,1);
   --font-display:var(--font-space-grotesk),ui-sans-serif,system-ui,sans-serif;
   --font-body:var(--font-inter),ui-sans-serif,system-ui,sans-serif;
@@ -768,9 +768,9 @@ const CSS = `
 
 /* NAV */
 .vcn .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:center;padding:12px 14px 0}
-.vcn .nav{width:100%;max-width:1080px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px;background:rgba(8,11,20,.6);backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--radius);height:56px;padding:0 8px 0 14px;transition:all .35s var(--ease)}
-.vcn .nav.scrolled{background:rgba(8,11,20,.88);box-shadow:var(--shadow-md);border-color:var(--line-bright)}
-.vcn .nav-logo{background:rgba(255,255,255,.9);border:none;cursor:pointer;padding:6px 8px;display:flex;border-radius:8px;flex-shrink:0}
+.vcn .nav{width:100%;max-width:1080px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px;background:rgba(255,255,255,.6);backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--radius);height:56px;padding:0 8px 0 14px;transition:all .35s var(--ease)}
+.vcn .nav.scrolled{background:rgba(255,255,255,.88);box-shadow:var(--shadow-md);border-color:var(--line-bright)}
+.vcn .nav-logo{background:transparent;border:none;cursor:pointer;padding:6px 8px;display:flex;border-radius:8px;flex-shrink:0}
 .vcn .nav-links{display:none;justify-content:center;gap:2px}
 .vcn .nav-links a{display:flex;align-items:center;gap:6px;color:var(--text-mid);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:8px;transition:all .2s var(--ease)}
 .vcn .nav-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);opacity:0;transition:opacity .2s var(--ease)}
@@ -782,7 +782,7 @@ const CSS = `
 .vcn .btn-signal:hover svg{transform:translateX(2px)}
 .vcn .nav-cta-desktop{display:none}
 .vcn .ham-btn{background:transparent;border:1px solid var(--line);border-radius:9px;cursor:pointer;padding:9px;color:var(--text-hi);display:flex;align-items:center;justify-content:center;justify-self:end}
-.vcn .mob-menu{position:fixed;top:74px;left:14px;right:14px;z-index:99;background:rgba(8,11,20,.97);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow-lg)}
+.vcn .mob-menu{position:fixed;top:74px;left:14px;right:14px;z-index:99;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow-lg)}
 .vcn .mob-menu a{color:var(--text-mid);font-size:15px;font-weight:600;text-decoration:none;padding:13px 16px;border-radius:9px;text-align:center}
 .vcn .mob-menu a:hover{background:var(--panel);color:var(--cyan)}
 .vcn .mob-menu .btn-signal{justify-content:center;margin-top:6px}
@@ -964,7 +964,7 @@ const CSS = `
 .vcn .tier-response-v{display:block;font-family:var(--font-mono);font-size:26px;font-weight:800;background:var(--grad-signal);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .vcn .tier-response-l{font-size:10.5px;color:var(--text-dim)}
 .vcn .tier-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px}
-.vcn .tier-stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:11px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.vcn .tier-stat{background:rgba(11,15,25,.035);border:1px solid var(--line);border-radius:11px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .vcn .tier-stat-l{font-size:11.5px;color:var(--text-dim)}
 .vcn .tier-stat-v{font-size:12.5px;font-weight:700;color:var(--text-hi);text-align:right}
 .vcn .tier-coverage{list-style:none;margin:0;padding:0;display:grid;gap:10px}
@@ -1018,12 +1018,12 @@ const CSS = `
 .vcn .help-card h4{color:var(--text-hi);font-size:14px;margin-bottom:15px}
 .vcn .help-card ul{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:11px}
 .vcn .help-card li{display:flex;gap:9px;align-items:flex-start;color:var(--text-mid);font-size:12.5px;line-height:1.6}
-.vcn .help-window{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
+.vcn .help-window{background:rgba(11,15,25,.035);border:1px solid var(--line);border-radius:10px;padding:13px}
 .vcn .help-window strong{display:block;color:var(--text-hi);font-size:11.5px;margin-bottom:4px}
 .vcn .help-window span{color:var(--text-dim);font-size:11.5px}
 
 /* FOOTER */
-.vcn footer{background:#030408;padding:44px 18px 22px;border-top:1px solid var(--line)}
+.vcn footer{background:var(--void-alt);padding:44px 18px 22px;border-top:1px solid var(--line)}
 .vcn .footer-inner{max-width:1200px;margin:0 auto}
 .vcn .footer-top{display:grid;grid-template-columns:1fr;gap:30px;padding-bottom:34px;border-bottom:1px solid var(--line)}
 .vcn .ft-desc{font-size:12px;color:var(--text-dim);line-height:1.75;max-width:260px;margin-top:12px}

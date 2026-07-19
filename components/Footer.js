@@ -65,7 +65,7 @@ export default function Footer() {
         </div>
 
         <div className="vcn-footer-bottom">
-          <span>© 2025 Visual Connect Network Pvt. Ltd. All rights reserved.</span>
+          <span>© 2025 Visual Connect Networks Pvt. Ltd. All rights reserved.</span>
           <span>System Integrators · India</span>
         </div>
       </div>
