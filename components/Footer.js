@@ -156,19 +156,19 @@ export default function Footer() {
           display: inline-flex;
           align-items: center;
           margin-top: 14px;
-          background: linear-gradient(135deg, var(--blue) 0%, #2a57d4 100%);
-          color: #fff;
+          background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+          color: #ffffff !important;
           font-size: 12px;
           font-weight: 700;
           padding: 10px 22px;
           border-radius: var(--radius-pill, 100px);
           text-decoration: none;
           transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-          box-shadow: 0 4px 16px rgba(59,108,245,0.2);
+          box-shadow: 0 4px 16px rgba(6,182,212,0.25);
         }
         .vcn-footer-cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 28px rgba(59,108,245,0.3);
+          box-shadow: 0 8px 28px rgba(6,182,212,0.4);
         }
         .vcn-footer-bottom {
           display: flex;

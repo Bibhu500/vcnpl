@@ -633,7 +633,6 @@ export default function VCNPLPage() {
             <p>Share your requirements and we&apos;ll craft a precise technical specification with the right products and partners.</p>
             <div className="cta-btns">
               <a href="#contact" className="btn-signal btn-lg" onClick={(e) => { e.preventDefault(); setModalOpen(true); }}>✉️ Request Free Consultation</a>
-              <a href="tel:+919876596016" className="btn-ghost btn-lg light">📞 +91 98765 96016</a>
             </div>
           </Reveal>
 
@@ -742,7 +741,7 @@ export default function VCNPLPage() {
                     <h3>Request Consultation</h3>
                     <p>Provide your details below and our solution specialists will reach out to you.</p>
                   </div>
-                  
+
                   <div className="form-grid">
                     <div className="form-group">
                       <label htmlFor="eq-name">Full Name *</label>
@@ -1130,7 +1129,7 @@ const CSS = `
 .vcn .ft-col h5{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-hi);font-weight:700;margin-bottom:13px}
 .vcn .ft-col a,.vcn .ft-contact span{display:block;font-size:12px;color:var(--text-dim);margin-bottom:9px;text-decoration:none;transition:color .2s var(--ease)}
 .vcn .ft-col a:hover{color:var(--cyan)}
-.vcn .ft-quote{display:inline-block;margin-top:6px;background:linear-gradient(120deg,#0891b2,#0284c7);color:#fff;font-size:11.5px;font-weight:700;padding:9px 16px;border-radius:var(--radius-pill)}
+.vcn .ft-quote{display:inline-block;margin-top:6px;background:linear-gradient(120deg,#0891b2,#0284c7);color:#fff !important;font-size:11.5px;font-weight:700;padding:9px 16px;border-radius:var(--radius-pill)}
 .vcn .footer-bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px;font-size:10.5px;color:var(--text-dim);opacity:.6}
 
 /* ═════ RESPONSIVE — mobile-first progressive enhancement ═════ */
