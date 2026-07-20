@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 
@@ -61,23 +61,26 @@ const PRODUCT_GROUPS = [
   { title: 'Smart Building Solutions', icon: '🏗️', img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&q=80', desc: 'Connected, automated environments for modern facilities.', items: ['Building Management System (BMS)', 'IoT-Based Monitoring', 'Smart Meeting Rooms', 'Energy Management', 'Integrated Building Automation'] },
 ];
 
+const IS_ICON = (paths, vb='0 0 24 24') => (
+  <svg viewBox={vb} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths}</svg>
+);
 const INTEGRATION_SERVICES = [
-  'Requirement Analysis',
-  'Solution Consulting',
-  'System Design & Architecture',
-  'Technical Specification Development',
-  'Bill of Quantity (BOQ) Preparation',
-  'Tender & GeM Bid Support',
-  'OEM Coordination',
-  'Proof of Concept (POC)',
-  'Site Survey & Assessment',
-  'Project Management',
-  'Installation & Commissioning',
-  'Testing & Acceptance',
-  'User Training',
-  'Annual Maintenance Contracts (AMC)',
-  'Preventive & Corrective Maintenance',
-  'Remote & On-Site Technical Support',
+  { icon: IS_ICON(<><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></>),                                                                       title: 'Requirement Analysis',               color: '#e0f7fe', accent: '#0891b2' },
+  { icon: IS_ICON(<><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.6-1.4 4.9-3.5 6.1L15 17H9l-.5-2.1C6.4 13.9 5 11.6 5 9a7 7 0 0 1 7-7z"/></>),                        title: 'Solution Consulting',                color: '#ecfdf5', accent: '#059669' },
+  { icon: IS_ICON(<><rect x="2" y="3" width="7" height="7" rx="1"/><rect x="15" y="3" width="7" height="7" rx="1"/><rect x="9" y="16" width="6" height="5" rx="1"/><path d="M5.5 10v3h13V10M12 13v3"/></>),  title: 'System Design & Architecture',       color: '#fdf4ff', accent: '#9333ea' },
+  { icon: IS_ICON(<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>), title: 'Technical Specification',            color: '#fff7ed', accent: '#ea580c' },
+  { icon: IS_ICON(<><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></>), title: 'BOQ Preparation',                    color: '#eff6ff', accent: '#2563eb' },
+  { icon: IS_ICON(<><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></>),                                                                title: 'Tender & GeM Bid Support',           color: '#f0fdf4', accent: '#16a34a' },
+  { icon: IS_ICON(<><path d="M11 15a4 4 0 0 1-8 0V7a4 4 0 0 1 8 0M13 9a4 4 0 0 1 8 0v8a4 4 0 0 1-8 0"/><path d="M7 19v2M17 19v2M9 7h2M13 7h2"/></>),                    title: 'OEM Coordination',                   color: '#fef2f2', accent: '#dc2626' },
+  { icon: IS_ICON(<><path d="M9 3h6L13.5 11H17l-5 10-5-10h3.5z"/><path d="M6.5 15h11"/></>),                                                                               title: 'Proof of Concept (POC)',             color: '#fefce8', accent: '#ca8a04' },
+  { icon: IS_ICON(<><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></>),                              title: 'Site Survey & Assessment',           color: '#e0f7fe', accent: '#0e7490' },
+  { icon: IS_ICON(<><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="13" y2="14"/><line x1="8" y1="18" x2="15" y2="18"/></>), title: 'Project Management',                 color: '#f5f3ff', accent: '#7c3aed' },
+  { icon: IS_ICON(<><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></>), title: 'Installation & Commissioning',       color: '#ecfdf5', accent: '#0891b2' },
+  { icon: IS_ICON(<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></>),                                                      title: 'Testing & Acceptance',               color: '#f0fdf4', accent: '#059669' },
+  { icon: IS_ICON(<><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></>),                                                                     title: 'User Training',                      color: '#fff7ed', accent: '#ea580c' },
+  { icon: IS_ICON(<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>),            title: 'Annual Maintenance (AMC)',           color: '#fdf4ff', accent: '#9333ea' },
+  { icon: IS_ICON(<><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></>),                    title: 'Preventive & Corrective Maint.',     color: '#eff6ff', accent: '#2563eb' },
+  { icon: IS_ICON(<><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></>), title: 'Remote & On-Site Support',           color: '#fef2f2', accent: '#dc2626' },
 ];
 
 const STEPS = [
@@ -199,8 +202,9 @@ export default function VCNPLPage() {
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [activeTier, setActiveTier] = useState(1);
   const [expandedSolution, setExpandedSolution] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formHighlight, setFormHighlight] = useState(false);
+  const formRef = useRef(null);
   const { scrollYProgress } = useScroll();
   const heroParallax = useTransform(scrollYProgress, [0, 0.15], [0, -60]);
 
@@ -470,21 +474,31 @@ export default function VCNPLPage() {
       </AnimatePresence>
 
       {/* ── INTEGRATION SERVICES ── */}
-      <section className="sec sec-alt">
+      <section className="sec sec-alt" id="integration">
         <div className="inner">
           <Reveal className="sec-head">
             <Kicker text="Integration Services" dark />
             <h2>End-to-End System Integration</h2>
+            <p className="sec-head-sub">Every stage of your project — from first consultation to long-term support — handled by our specialists.</p>
           </Reveal>
-          <Stagger className="int-grid">
+          <div className="int-cards-grid">
             {INTEGRATION_SERVICES.map((item, i) => (
-              <motion.div key={item} className="int-card" variants={slideLeft}>
-                <span className="int-num">{String(i + 1).padStart(2, '0')}</span>
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7" /></svg>
-                {item}
+              <motion.div
+                key={item.title}
+                className="int-service-card"
+                style={{ '--isc-bg': item.color, '--isc-accent': item.accent }}
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: (i % 4) * 0.08 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              >
+                <div className="isc-icon">{item.icon}</div>
+                <div className="isc-title">{item.title}</div>
+                <div className="isc-bar" />
               </motion.div>
             ))}
-          </Stagger>
+          </div>
         </div>
       </section>
 
@@ -632,8 +646,83 @@ export default function VCNPLPage() {
             <h2>Let&apos;s Build Your Ideal Solution</h2>
             <p>Share your requirements and we&apos;ll craft a precise technical specification with the right products and partners.</p>
             <div className="cta-btns">
-              <a href="#contact" className="btn-signal btn-lg" onClick={(e) => { e.preventDefault(); setModalOpen(true); }}>✉️ Request Free Consultation</a>
+              <button
+                className="btn-signal btn-lg"
+                onClick={() => {
+                  formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  setFormHighlight(true);
+                  setTimeout(() => setFormHighlight(false), 1600);
+                  setTimeout(() => {
+                    const first = formRef.current?.querySelector('input, select, textarea');
+                    first?.focus();
+                  }, 600);
+                }}
+              >
+                ✉️ Request Free Consultation
+              </button>
             </div>
+          </Reveal>
+
+          {/* ── INLINE CONSULTATION FORM ── */}
+          <Reveal className="inline-form-wrap" delay={0.1}>
+            {!formSubmitted ? (
+              <form
+                ref={formRef}
+                onSubmit={(e) => { e.preventDefault(); setFormSubmitted(true); }}
+                className={`inline-enquiry-form${formHighlight ? ' ief-highlight' : ''}`}
+              >
+                <div className="ief-grid">
+                  <div className="form-group">
+                    <label htmlFor="ief-name">Full Name *</label>
+                    <input type="text" id="ief-name" required placeholder="John Doe" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="ief-email">Business Email *</label>
+                    <input type="email" id="ief-email" required placeholder="john@company.com" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="ief-phone">Phone Number *</label>
+                    <input type="tel" id="ief-phone" required placeholder="+91 XXXXX XXXXX" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="ief-company">Company / Organization</label>
+                    <input type="text" id="ief-company" placeholder="Your company name" />
+                  </div>
+                  <div className="form-group ief-full">
+                    <label htmlFor="ief-solution">Solutions Required *</label>
+                    <select id="ief-solution" required defaultValue="">
+                      <option value="" disabled>Select a core solution...</option>
+                      {SOLUTIONS.map(s => <option key={s.title} value={s.title}>{s.title}</option>)}
+                      <option value="Other">Other / Infrastructure Sourcing</option>
+                    </select>
+                  </div>
+                  <div className="form-group ief-full">
+                    <label htmlFor="ief-msg">Brief Project Scope / Message *</label>
+                    <textarea id="ief-msg" required rows="3" placeholder="Tell us about your requirements..." />
+                  </div>
+                </div>
+                <button type="submit" className="btn-signal btn-lg ief-submit">
+                  ✉️ Submit Enquiry
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+                </button>
+              </form>
+            ) : (
+              <motion.div
+                className="ief-success"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="ief-success-icon">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <h3>Thank You!</h3>
+                <p>Your enquiry has been submitted. Our team will contact you within 24 hours.</p>
+                <button onClick={() => setFormSubmitted(false)} className="btn-ghost btn-lg" style={{ marginTop: '12px' }}>Submit Another</button>
+              </motion.div>
+            )}
           </Reveal>
 
           <div className="contact-layout">
@@ -703,103 +792,7 @@ export default function VCNPLPage() {
         </div>
       </a>
 
-      {/* ── ENQUIRY MODAL DIALOG ── */}
-      <AnimatePresence>
-        {modalOpen && (
-          <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => { setModalOpen(false); setFormSubmitted(false); }}
-          >
-            <motion.div
-              className="modal-card brk"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close" onClick={() => { setModalOpen(false); setFormSubmitted(false); }} aria-label="Close modal">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
 
-              {!formSubmitted ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setFormSubmitted(true);
-                  }}
-                  className="enquiry-form"
-                >
-                  <div className="form-head">
-                    <span className="mono-chip">Enquiry Form</span>
-                    <h3>Request Consultation</h3>
-                    <p>Provide your details below and our solution specialists will reach out to you.</p>
-                  </div>
-
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label htmlFor="eq-name">Full Name *</label>
-                      <input type="text" id="eq-name" required placeholder="John Doe" />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="eq-email">Business Email *</label>
-                      <input type="email" id="eq-email" required placeholder="john@company.com" />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="eq-phone">Phone Number *</label>
-                      <input type="tel" id="eq-phone" required placeholder="+91 XXXXX XXXXX" />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="eq-company">Company / Organization</label>
-                      <input type="text" id="eq-company" placeholder="Visual Connect Networks" />
-                    </div>
-                    <div className="form-group full-width">
-                      <label htmlFor="eq-solution">Solutions Required *</label>
-                      <select id="eq-solution" required defaultValue="">
-                        <option value="" disabled>Select a core solution...</option>
-                        {SOLUTIONS.map(s => <option key={s.title} value={s.title}>{s.title}</option>)}
-                        <option value="Other">Other / Infrastructure Sourcing</option>
-                      </select>
-                    </div>
-                    <div className="form-group full-width">
-                      <label htmlFor="eq-msg">Brief Project Scope / Message *</label>
-                      <textarea id="eq-msg" required rows="3" placeholder="Tell us about your requirements..."></textarea>
-                    </div>
-                  </div>
-
-                  <button type="submit" className="btn-signal btn-lg full-width" style={{ marginTop: '16px', justifyContent: 'center' }}>
-                    Submit Enquiry
-                  </button>
-                </form>
-              ) : (
-                <motion.div
-                  className="form-success"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="success-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                  <h3>Thank You!</h3>
-                  <p>Your enquiry has been successfully submitted. Our solution design team will contact you within 24 hours.</p>
-                  <button onClick={() => { setModalOpen(false); setFormSubmitted(false); }} className="btn-ghost btn-lg" style={{ marginTop: '12px' }}>
-                    Close Window
-                  </button>
-                </motion.div>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <style>{CSS}</style>
     </div>
@@ -968,12 +961,20 @@ const CSS = `
 .vcn .prod-body li{font-size:11px;color:var(--text-mid);display:flex;gap:7px;align-items:flex-start;line-height:1.5}
 .vcn .pdot{width:4px;height:4px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:6px}
 
-/* INTEGRATION STRIP */
-.vcn .int-grid{display:grid;grid-template-columns:1fr;gap:1px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--line)}
-.vcn .int-card{background:var(--panel);padding:16px 18px;color:var(--text-mid);font-size:13px;line-height:1.5;display:flex;align-items:center;gap:12px;transition:background .3s var(--ease)}
-.vcn .int-num{font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);width:20px;flex-shrink:0}
-.vcn .int-card svg{color:var(--cyan);flex-shrink:0}
-.vcn .int-card:hover{background:var(--panel-hover)}
+/* INTEGRATION SERVICES CARDS */
+.vcn .int-cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.vcn .int-service-card{background:var(--isc-bg,#e0f7fe);border:1.5px solid transparent;border-radius:var(--radius);padding:20px 18px;display:flex;flex-direction:column;gap:10px;cursor:default;position:relative;overflow:hidden;transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.vcn .int-service-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--isc-bg,#e0f7fe),rgba(255,255,255,0.6));opacity:0;transition:opacity .25s var(--ease)}
+.vcn .int-service-card:hover{border-color:var(--isc-accent,#0891b2);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.vcn .int-service-card:hover::before{opacity:1}
+.vcn .isc-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.7);border:1px solid rgba(0,0,0,.06);position:relative;z-index:1;flex-shrink:0}
+.vcn .isc-icon svg{width:22px;height:22px;color:var(--isc-accent,#0891b2)}
+.vcn .isc-title{font-size:13px;font-weight:700;color:var(--isc-accent,#0891b2);line-height:1.4;position:relative;z-index:1}
+.vcn .isc-bar{height:3px;width:32px;border-radius:2px;background:var(--isc-accent,#0891b2);opacity:0.35;margin-top:2px;position:relative;z-index:1;transition:width .3s var(--ease),opacity .3s var(--ease)}
+.vcn .int-service-card:hover .isc-bar{width:56px;opacity:0.7}
+.vcn .sec-head-sub{font-size:14px;color:var(--text-dim);line-height:1.7;margin-top:10px}
+@media(min-width:560px){.vcn .int-cards-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:860px){.vcn .int-cards-grid{grid-template-columns:repeat(4,1fr)}}
 
 /* ABOUT */
 .vcn .about-grid{display:grid;grid-template-columns:1fr;gap:34px;align-items:center}
@@ -1117,9 +1118,23 @@ const CSS = `
 .vcn .help-card h4{color:var(--text-hi);font-size:14px;margin-bottom:15px}
 .vcn .help-card ul{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:11px}
 .vcn .help-card li{display:flex;gap:9px;align-items:flex-start;color:var(--text-mid);font-size:12.5px;line-height:1.6}
-.vcn .help-window{background:rgba(11,15,25,.035);border:1px solid var(--line);border-radius:10px;padding:13px}
+.vcn .help-window{background:rgba(6,182,212,.04);border:1px solid var(--line);border-radius:10px;padding:13px}
 .vcn .help-window strong{display:block;color:var(--text-hi);font-size:11.5px;margin-bottom:4px}
 .vcn .help-window span{color:var(--text-dim);font-size:11.5px}
+
+/* INLINE CONSULTATION FORM */
+.vcn .inline-form-wrap{max-width:860px;margin:0 auto 40px;position:relative;z-index:1}
+.vcn .inline-enquiry-form{background:rgba(255,255,255,0.92);border:1px solid rgba(6,182,212,.2);border-radius:var(--radius-lg);padding:28px 26px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(6,182,212,.1);transition:box-shadow .3s var(--ease),border-color .3s var(--ease)}
+.vcn .inline-enquiry-form.ief-highlight{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(6,182,212,.25),0 8px 40px rgba(6,182,212,.25);animation:iefPulse 0.5s ease-in-out 3}
+@keyframes iefPulse{0%,100%{box-shadow:0 0 0 3px rgba(6,182,212,.25),0 8px 40px rgba(6,182,212,.2)}50%{box-shadow:0 0 0 6px rgba(6,182,212,.4),0 12px 48px rgba(6,182,212,.35)}}
+.vcn .ief-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:18px}
+.vcn .ief-full{grid-column:1/-1}
+.vcn .ief-submit{width:100%;justify-content:center;margin-top:2px}
+.vcn .ief-success{background:rgba(255,255,255,0.92);border:1px solid rgba(6,182,212,.25);border-radius:var(--radius-lg);padding:40px 26px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;backdrop-filter:blur(16px)}
+.vcn .ief-success-icon{width:60px;height:60px;border-radius:50%;background:rgba(6,182,212,.12);color:#0891b2;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.vcn .ief-success h3{font-size:22px;font-weight:700;color:var(--text-hi)}
+.vcn .ief-success p{font-size:13.5px;color:var(--text-mid);line-height:1.6;max-width:340px}
+@media(min-width:560px){.vcn .ief-grid{grid-template-columns:1fr 1fr}}
 
 /* FOOTER */
 .vcn footer{background:linear-gradient(160deg,#e0f7fe,#f0fbff);padding:44px 18px 22px;border-top:1px solid rgba(6,182,212,.2)}
@@ -1153,7 +1168,6 @@ const CSS = `
   .vcn .ham-btn{display:none}
   .vcn .g4{grid-template-columns:repeat(3,1fr)}
   .vcn .prod-card{grid-template-columns:.85fr 1.15fr}
-  .vcn .int-grid{grid-template-columns:repeat(2,1fr)}
   .vcn .about-grid{grid-template-columns:.9fr 1.1fr;gap:52px}
   .vcn .about-img-wrap img{height:380px}
   .vcn .val-grid{grid-template-columns:repeat(3,1fr)}
