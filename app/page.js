@@ -208,6 +208,7 @@ export default function VCNPLPage() {
   const { scrollYProgress } = useScroll();
   const heroParallax = useTransform(scrollYProgress, [0, 0.15], [0, -60]);
 
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -581,17 +582,25 @@ export default function VCNPLPage() {
             <p>Requirement-led solutions aligned to sector-specific standards and long-term scalability.</p>
           </Reveal>
 
-          <Reveal className="ind-tabs-wrap">
-            <div className="ind-tabs" role="tablist" aria-label="Industry sectors">
-              {INDUSTRIES.map((ind, i) => (
-                <button key={ind.name} type="button" role="tab" aria-selected={activeIndustry === i}
-                  className={`ind-tab${activeIndustry === i ? ' active' : ''}`} onClick={() => setActiveIndustry(i)}>
-                  {activeIndustry === i && (
-                    <motion.span className="ind-tab-bg" layoutId="ind-tab-bg" transition={{ type: 'spring', stiffness: 420, damping: 34 }} />
-                  )}
-                  <span className="ind-tab-label"><span aria-hidden="true">{ind.icon}</span>{ind.name}</span>
-                </button>
-              ))}
+          <Reveal className="ind-tabs-container">
+            <div className="ind-tabs-wrap">
+              <div className="ind-tabs" role="tablist" aria-label="Industry sectors">
+                {INDUSTRIES.map((ind, i) => (
+                  <button key={ind.name} type="button" role="tab" aria-selected={activeIndustry === i}
+                    className={`ind-tab${activeIndustry === i ? ' active' : ''}`} onClick={() => setActiveIndustry(i)}>
+                    {activeIndustry === i && (
+                      <motion.span className="ind-tab-bg" layoutId="ind-tab-bg" transition={{ type: 'spring', stiffness: 420, damping: 34 }} />
+                    )}
+                    <span className="ind-tab-label"><span aria-hidden="true">{ind.icon}</span>{ind.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="ind-scroll-arrow-hint">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
             </div>
           </Reveal>
 
@@ -1033,9 +1042,13 @@ const CSS = `
 .vcn .proc-step p{font-size:11.5px;color:var(--text-dim);line-height:1.65;margin:0}
 
 /* INDUSTRIES */
-.vcn .ind-tabs-wrap{margin-bottom:26px;overflow-x:auto;scrollbar-width:none}
+.vcn .ind-tabs-container{position:relative;margin-bottom:26px}
+.vcn .ind-tabs-wrap{overflow-x:auto;scrollbar-width:none}
 .vcn .ind-tabs-wrap::-webkit-scrollbar{display:none}
 .vcn .ind-tabs{display:flex;gap:4px;padding:5px;background:var(--panel);border-radius:13px;border:1px solid var(--line);width:max-content;margin:0 auto}
+.vcn .ind-scroll-arrow-hint{position:absolute;right:4px;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(120deg,#0891b2,#0284c7);color:#fff;box-shadow:0 4px 10px rgba(6,182,212,0.3);pointer-events:none;z-index:10;animation:arrow-bounce-right 1.2s infinite ease-in-out}
+@keyframes arrow-bounce-right{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(5px)}}
+@media(min-width:1024px){.vcn .ind-scroll-arrow-hint{display:none}}
 .vcn .ind-tab{position:relative;display:inline-flex;align-items:center;padding:9px 14px;border-radius:9px;border:none;background:transparent;cursor:pointer;white-space:nowrap}
 .vcn .ind-tab-bg{position:absolute;inset:0;background:linear-gradient(120deg,#0891b2,#0284c7);border-radius:9px;z-index:0}
 .vcn .ind-tab-label{position:relative;z-index:1;display:flex;align-items:center;gap:6px;font-family:var(--font-display);font-size:12.5px;font-weight:600;color:var(--text-mid)}
@@ -1076,9 +1089,9 @@ const CSS = `
 .vcn .marquee-track{display:flex;gap:12px;width:max-content;animation:marquee 34s linear infinite;padding:0 18px}
 .vcn .marquee:hover .marquee-track{animation-play-state:paused}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.vcn .p-chip{width:128px;aspect-ratio:16/9;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.9);border:1px solid rgba(6,182,212,.18);border-radius:13px;padding:14px;transition:all .3s var(--ease)}
+.vcn .p-chip{width:128px;aspect-ratio:16/9;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.9);border:1px solid rgba(6,182,212,.18);border-radius:13px;padding:6px;transition:all .3s var(--ease)}
 .vcn .p-chip:hover{background:#fff;border-color:var(--cyan);box-shadow:0 4px 16px rgba(6,182,212,.15)}
-.vcn .p-chip img{max-width:86%;max-height:86%;object-fit:contain;filter:grayscale(.2) brightness(1.1) opacity(.9);transition:all .3s var(--ease)}
+.vcn .p-chip img{max-width:94%;max-height:94%;object-fit:contain;filter:grayscale(.2) brightness(1.1) opacity(.9);transition:all .3s var(--ease)}
 .vcn .p-chip:hover img{filter:grayscale(0) brightness(1.05) opacity(1)}
 
 @keyframes float-gentle{
