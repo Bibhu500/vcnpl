@@ -97,7 +97,6 @@ const INDUSTRIES = [
   { name: 'Corporate Enterprises', icon: '🏢', img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=80', points: ['Conference AV, networking backbone, and secure access infrastructure.', 'Complete office technology setup support.'] },
   { name: 'Educational Institutions', icon: '🎓', img: '/sectors/education vcnpl.png', points: ['Smart classrooms, interactive panels, and campus networking.', 'Integrated deployment for scalable learning environments.'] },
   { name: 'Healthcare', icon: '🏥', img: '/sectors/healthcare vcnpl.png', points: ['Critical surveillance, communication systems, and IT infrastructure.', 'Precise planning for sensitive operational environments.'] },
-  { name: 'Manufacturing', icon: '🏭', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&q=80', points: ['Industrial networking, rugged CCTV, and building automation.', 'High-reliability solutions with commissioning support.'] },
   { name: 'Hospitality', icon: '🏨', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80', points: ['Guest WiFi, digital signage, AV systems, and security.', 'Seamless technology integration for enhanced guest experiences.'] },
   { name: 'Banking & Financial Institutions', icon: '🏦', img: 'https://images.unsplash.com/photo-1501167733089-ce6f2db1463e?w=900&q=80', points: ['Secure networking, access control, and branch surveillance.', 'Robust IT infrastructure for financial institutions.'] },
   { name: 'Retail & Commercial Spaces', icon: '🛍️', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900&q=80', points: ['Networking, CCTV, and digital signage across retail environments.', 'Scalable rollouts across multi-location commercial spaces.'] },
@@ -235,8 +234,9 @@ export default function VCNPLPage() {
       {/* ── NAV ── */}
       <div className="nav-wrap">
         <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
-          <button className="nav-logo brk" onClick={() => goto('home')} aria-label="Home">
+          <button className="nav-logo" onClick={() => goto('home')} aria-label="Home">
             <Image src={LOGO_SQ} alt={COMPANY} width={150} height={32} priority style={{ height: 30, width: 'auto' }} />
+            <span className="nav-brand-name">Visual Connect Networks Pvt. Ltd.</span>
           </button>
           <div className="nav-links">
             {NAV.map(n => (
@@ -321,15 +321,21 @@ export default function VCNPLPage() {
                   Explore Solutions
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
                 </a>
-                <a href="#contact" className="btn-ghost btn-lg" onClick={(e) => { e.preventDefault(); setModalOpen(true); }}>Request Consultation</a>
+                <a href="#contact" className="btn-ghost btn-lg" onClick={(e) => { e.preventDefault(); formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); setFormHighlight(true); setTimeout(() => setFormHighlight(false), 1600); setTimeout(() => { const first = formRef.current?.querySelector('input, select, textarea'); first?.focus(); }, 600); }}>Request Consultation</a>
               </motion.div>
 
               <motion.div className="hero-stats" initial="hidden" animate="show" variants={stagger} transition={{ delayChildren: 0.4 }}>
-                {HERO_STATS.map(s => (
-                  <motion.div key={s.label} className="hero-stat" variants={fadeUp}>
+                {HERO_STATS.map((s, i) => (
+                  <motion.div key={s.label} className="hero-stat hero-stat-link" variants={fadeUp}
+                    onClick={() => goto(i === 0 ? 'solutions' : i === 1 ? 'partners' : 'integration')}
+                    role="button" tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goto(i === 0 ? 'solutions' : i === 1 ? 'partners' : 'integration'); } }}
+                    title={i === 0 ? 'View all 8 solution areas' : i === 1 ? 'View OEM partners' : 'View end-to-end integration services'}
+                  >
                     <div className="hero-stat-v">{s.value}</div>
                     <div className="hero-stat-l">{s.label}</div>
                     <div className="hero-stat-d">{s.detail}</div>
+                    <div className="hero-stat-arrow">↗</div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -760,12 +766,15 @@ export default function VCNPLPage() {
         <div className="footer-inner">
           <div className="footer-top">
             <div>
-              <div className="ft-brand"><Image src={LOGO_H} alt={COMPANY} width={100} height={80} style={{ height: 80, width: 'auto', objectFit: 'contain' }} /></div>
+              <div className="ft-brand">
+                <Image src={LOGO_H} alt={COMPANY} width={100} height={80} style={{ height: 80, width: 'auto', objectFit: 'contain' }} />
+                <p className="ft-company-name">Visual Connect Networks Pvt. Ltd.</p>
+              </div>
               <p className="ft-desc">System integrators delivering tailored technology solutions — CCTV, AV, networking, test equipment, and end-to-end infrastructure.</p>
             </div>
             <div className="ft-col">
               <h5>Solutions</h5>
-              {['Enterprise Networking', 'CCTV & PA (Public announcement) System', 'Access Control', 'Video Conferencing', 'Audio Visual Solutions', 'PA System'].map(l => (
+              {['Enterprise Networking', 'CCTV & PA (Public announcement) System', 'Access Control', 'Video Conferencing', 'Audio Visual Solutions', 'PA System', 'UPS & Power Backup Systems'].map(l => (
                 <a key={l} href="#solutions" onClick={(e) => { e.preventDefault(); goto('solutions'); }}>{l}</a>
               ))}
             </div>
@@ -859,10 +868,13 @@ const CSS = `
 .vcn .brk:hover::before,.vcn .brk:hover::after,.vcn .brk:focus-visible::before,.vcn .brk:focus-visible::after{opacity:1}
 .vcn .brk:hover::before{transform:translate(-3px,-3px)}
 .vcn .brk:hover::after{transform:translate(3px,3px)}
+/* Hero panel, about, industry & tier panels keep the subtle bracket at rest */
 .vcn .hero-panel-card.brk::before,.vcn .hero-panel-card.brk::after,
 .vcn .about-img-wrap.brk::before,.vcn .about-img-wrap.brk::after,
 .vcn .ind-panel.brk::before,.vcn .ind-panel.brk::after,
 .vcn .tier-panel.brk::before,.vcn .tier-panel.brk::after{opacity:.75}
+/* Contact cards: no diagonal brackets */
+.vcn .contact-card.brk::before,.vcn .contact-card.brk::after{display:none}
 
 /* SCROLL SIGNAL BAR */
 .vcn .scroll-bar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--grad-signal);transform-origin:0% 50%;z-index:300;box-shadow:0 0 14px rgba(6,182,212,.7)}
@@ -871,7 +883,9 @@ const CSS = `
 .vcn .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:center;padding:12px 14px 0}
 .vcn .nav{width:100%;max-width:1080px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px;background:rgba(240,251,255,.85);backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--radius);height:56px;padding:0 8px 0 14px;transition:all .35s var(--ease)}
 .vcn .nav.scrolled{background:rgba(255,255,255,.95);box-shadow:0 8px 32px rgba(6,182,212,.12);border-color:var(--line-bright)}
-.vcn .nav-logo{background:transparent;border:none;cursor:pointer;padding:6px 8px;display:flex;border-radius:8px;flex-shrink:0}
+.vcn .nav-logo{background:transparent;border:none;cursor:pointer;padding:6px 8px;display:flex;align-items:center;gap:9px;border-radius:8px;flex-shrink:0}
+.vcn .nav-brand-name{font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--text-hi);letter-spacing:-.01em;line-height:1.2;max-width:130px;text-align:left;display:none}
+@media(min-width:560px){.vcn .nav-brand-name{display:block}}
 .vcn .nav-links{display:none;justify-content:center;gap:2px}
 .vcn .nav-links a{display:flex;align-items:center;gap:6px;color:var(--text-mid);font-size:13px;font-weight:600;text-decoration:none;padding:8px 12px;border-radius:8px;transition:all .2s var(--ease)}
 .vcn .nav-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);opacity:0;transition:opacity .2s var(--ease)}
@@ -917,6 +931,10 @@ const CSS = `
 .vcn .hero-stat-v{font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--text-hi);letter-spacing:-.02em;line-height:1}
 .vcn .hero-stat-l{font-size:11.5px;font-weight:700;color:var(--cyan);margin-top:6px}
 .vcn .hero-stat-d{font-size:11px;color:var(--text-dim);margin-top:3px;max-width:150px;line-height:1.5}
+.vcn .hero-stat-link{cursor:pointer;border-radius:8px;padding:6px 10px 6px 0;transition:background .2s var(--ease)}
+.vcn .hero-stat-link:hover{background:rgba(6,182,212,.06)}
+.vcn .hero-stat-arrow{font-size:10px;color:var(--cyan);opacity:0;margin-top:2px;transition:opacity .2s var(--ease)}
+.vcn .hero-stat-link:hover .hero-stat-arrow{opacity:1}
 .vcn .hero-panel-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-glow);backdrop-filter:blur(16px)}
 .vcn .hero-panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .vcn .hero-panel-head h3{font-size:14px;font-weight:700}
@@ -1153,6 +1171,7 @@ const CSS = `
 .vcn footer{background:linear-gradient(160deg,#e0f7fe,#f0fbff);padding:44px 18px 22px;border-top:1px solid rgba(6,182,212,.2)}
 .vcn .footer-inner{max-width:1200px;margin:0 auto}
 .vcn .footer-top{display:grid;grid-template-columns:1fr;gap:30px;padding-bottom:34px;border-bottom:1px solid var(--line)}
+.vcn .ft-company-name{font-size:12px;font-weight:700;color:var(--text-hi);margin-top:8px;letter-spacing:-.01em}
 .vcn .ft-desc{font-size:12px;color:var(--text-dim);line-height:1.75;max-width:260px;margin-top:12px}
 .vcn .ft-col h5{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-hi);font-weight:700;margin-bottom:13px}
 .vcn .ft-col a,.vcn .ft-contact span{display:block;font-size:12px;color:var(--text-dim);margin-bottom:9px;text-decoration:none;transition:color .2s var(--ease)}
